@@ -1,8 +1,7 @@
 import java.util.*;
 public class Splitwise {
-    private static Map<String, User> users = new HashMap<>();
-    private static List<Expense> expenses = new ArrayList<>();
-    private static Map<String, Map<String, Double>> balances = new HashMap<>();
+    private static final Map<String, User> users = new HashMap<>();
+    private static final Map<String, Map<String, Double>> balances = new HashMap<>();
 
     public static void addExpense(User paidBy, double amount, int noOfUsers, List<User> usersInvolved, String type, List<Double> shares) {
         if (type.equals("PERCENT")) {
@@ -19,32 +18,31 @@ public class Splitwise {
             }
         }
         Expense expense = new Expense(paidBy, amount, type, usersInvolved, shares);
-        expenses.add(expense);
 
-        updateBalances(expense);
+        updateBalances(expense, noOfUsers);
     }
 
-    public static void updateBalances(Expense expense){
+    public static void updateBalances(Expense expense, int noOfUsers) {
         User paidBy = expense.paidBy;
         double amount = expense.amount;
         List<User> usersInvolved = expense.usersInvolved;
         List<Double> shares = expense.shares;
 
         if(expense.type.equals("EQUAL")){
-            double share = roundOff(amount / usersInvolved.size());
+            double share = roundOff(amount / noOfUsers);
             for(User user: usersInvolved){
                 if(!user.name.equals(paidBy.name)){
                     updateBalance(user.userId, paidBy.userId, share);
                 }
             }
         } else if(expense.type.equals("EXACT")){
-            for(int i = 0; i < usersInvolved.size(); ++i){
+            for(int i = 0; i < noOfUsers; ++i){
                 User user = usersInvolved.get(i);
                 double share = shares.get(i);
                 updateBalance(user.userId, paidBy.userId, share);
             }
         } else{
-            for(int i = 0; i < usersInvolved.size(); ++i){
+            for(int i = 0; i < noOfUsers; ++i){
                 User user = usersInvolved.get(i);
                 double share = roundOff((amount * shares.get(i)) / 100 );
                 if(!user.equals(paidBy)){
