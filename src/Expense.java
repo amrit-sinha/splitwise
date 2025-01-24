@@ -1,12 +1,12 @@
 import java.util.List;
 public class Expense {
-    String paidBy;
+    User paidBy;
     double amount;
     String type;
-    List<String> usersInvolved;
+    List<User> usersInvolved;
     List<Double> shares;
 
-    public Expense(String paidBy, double amount, String type, List<String> usersInvolved, List<Double> shares){
+    public Expense(User paidBy, double amount, String type, List<User> usersInvolved, List<Double> shares){
         this.paidBy = paidBy;
         this.amount = amount;
         this.type = type;
